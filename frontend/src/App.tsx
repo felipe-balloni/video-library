@@ -79,10 +79,16 @@
 //     };
 // }
 
-import { Event } from './pages/Event';
+import { Router } from './Router';
+import { client } from './lib/apollo';
+import { ApolloProvider } from '@apollo/client';
 
 export function App() {
     // const { data } = useQuery<{ lessons: Lessons }>(GET_LESSONS_QUERY);
 
-    return <Event />;
+    return (
+        <ApolloProvider client={client}>
+            <Router />
+        </ApolloProvider>
+    );
 }

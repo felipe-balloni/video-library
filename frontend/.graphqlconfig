@@ -9,8 +9,8 @@
                     "user-agent": "JS GraphQL",
                     "content-type": "application/json",
                     "accept": "application/json",
-                    "authorization": "Bearer ${env:AUTH_TOKEN}"
-                    },
+                    "authorization": "Bearer ${env:VITE_AUTH_TOKEN}"
+                },
                 "introspect": true
             }
         }
