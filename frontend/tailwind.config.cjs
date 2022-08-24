@@ -31,6 +31,15 @@ module.exports = {
             }
         },
         extend: {
+            backgroundImage: {
+                blur: "url('/src/assets/ReactJS-icon.svg'),url('/src/assets/blur.png')",
+            },
+            backgroundPosition: {
+                blur: 'top,center',
+            },
+            backgroundSize: {
+                blur: 'auto,cover',
+            },
             fontFamily: {
                 sans: ["Roboto", "sans-serif"],
             },

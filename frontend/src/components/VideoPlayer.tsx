@@ -1,4 +1,3 @@
-import React from 'react';
 import {
     ChatAlt2Icon,
     ChevronRightIcon,
@@ -7,9 +6,9 @@ import {
 } from '@heroicons/react/outline';
 import '@vime/core/themes/default.css';
 import { DefaultUi, Player, Video, Vimeo, Youtube } from '@vime/react';
-import { LogoFooter } from './Logo';
 import { gql, useQuery } from '@apollo/client';
 import { getStrapiMedia } from '../lib/media';
+import { Footer } from './Footer';
 
 const GET_LESSON_BY_SLUG = gql`
     fragment FileParts on UploadFileEntityResponse {
@@ -195,7 +194,11 @@ export function VideoPlayer(props: VideoProps) {
                     </Player>
                 );
             default:
-                return <div className="flex-1">Sem video neste conteúdo</div>;
+                return (
+                    <div className="flex-1 items-center justify-center text-3xl text-gray-300">
+                        Sem video neste conteúdo
+                    </div>
+                );
         }
     };
 
@@ -304,18 +307,7 @@ export function VideoPlayer(props: VideoProps) {
                         </div>
                     </a>
                 </div>
-                <footer className="flex items-center justify-between gap-8 mt-20 border-t border-gray-500 pt-6">
-                    <LogoFooter />
-                    <strong className="text-gray-300 flex-1">
-                        Rocketseat - Todos os direitos reservados
-                    </strong>
-                    <a
-                        href="#"
-                        className="text-gray-300 hover:text-gray-200 text-sm"
-                    >
-                        Políticas de privacidade
-                    </a>
-                </footer>
+                <Footer />
             </article>
         </section>
     );

@@ -1,11 +1,9 @@
-import {ApolloClient, InMemoryCache} from "@apollo/client";
-
-const token = import.meta.env.VITE_AUTH_TOKEN;
+import { ApolloClient, InMemoryCache } from '@apollo/client';
 
 export const client = new ApolloClient({
-    uri: 'http://localhost:1337/graphql',
+    uri: `${import.meta.env.VITE_STRAPI_API_URL}/graphql`,
     headers: {
-        authorization: `Bearer ${token}`
+        authorization: `Bearer ${import.meta.env.VITE_AUTH_TOKEN}`
     },
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache()
 });
