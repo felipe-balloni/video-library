@@ -1,9 +1,40 @@
+import { FormEvent, useState } from 'react';
+import { gql, useMutation } from '@apollo/client';
+
 import { Logo } from '../components/Logo';
 import { Footer } from '../components/Footer';
-
 import codeMock from '/src/assets/code-mock.png';
+import { useNavigate } from 'react-router-dom';
+
+const CREATE_SUBSCRIBER = gql`
+    mutation createSubscriber($name: String!, $email: String!) {
+        createSubscriber(data: { name: $name, email: $email }) {
+            data {
+                id
+                attributes {
+                    name
+                    email
+                }
+            }
+        }
+    }
+`;
 
 export function Home() {
+    const navigate = useNavigate();
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+
+    const [createSubscriber, { loading }] = useMutation(CREATE_SUBSCRIBER);
+
+    function handeSubscribe(event: FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+        // TODO: validate form
+        createSubscriber({ variables: { name, email } }).then(() => {
+            navigate('/event');
+        });
+    }
+
     return (
         <>
             <section className="bg-no-repeat bg-blur min-h-screen flex flex-col">
@@ -28,20 +59,29 @@ export function Home() {
                         <strong className="block mb-6 text-2xl">
                             Inscreva-se gratuitamente
                         </strong>
-                        <form action="" className="flex flex-col w-full gap-2">
+                        <form
+                            onSubmit={handeSubscribe}
+                            className="flex flex-col w-full gap-2"
+                        >
                             <input
                                 type="text"
                                 placeholder="Nome"
                                 className="bg-gray-900 rounded px-5 h-14"
+                                onChange={e => setName(e.target.value)}
+                                required
                             />
                             <input
                                 type="email"
                                 placeholder="Digite seu e-mail"
                                 className="bg-gray-900 rounded px-5 h-14"
+                                onChange={e => setEmail(e.target.value)}
+                                required
                             />
                             <button
                                 type="submit"
-                                className="bg-green-500 rounded px-5 h-14 mt-4 uppercase font-bold text-sm hover:bg-green-700 transition-colors duration-150"
+                                disabled={loading}
+                                className="bg-green-500 rounded px-5 h-14 mt-4 uppercase font-bold text-sm hover:bg-green-700 transition-colors duration-150
+                                 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 Inscrever-se
                             </button>

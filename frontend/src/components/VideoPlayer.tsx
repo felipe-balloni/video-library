@@ -1,9 +1,9 @@
 import {
-    ChatAlt2Icon,
+    BoltIcon,
+    ChatBubbleLeftRightIcon,
     ChevronRightIcon,
-    DocumentDownloadIcon,
-    LightningBoltIcon
-} from '@heroicons/react/outline';
+    DocumentArrowDownIcon
+} from '@heroicons/react/24/outline';
 import '@vime/core/themes/default.css';
 import { DefaultUi, Player, Video, Vimeo, Youtube } from '@vime/react';
 import ReactMarkdown from 'react-markdown';
@@ -253,7 +253,7 @@ export function VideoPlayer(props: VideoProps) {
                             href="#"
                             className="p-4 text-sm bg-green-500 flex items-center rounded font-bold uppercase gap-2 justify-center hover:bg-green-700 transition-colors duration-150"
                         >
-                            <ChatAlt2Icon className="h-6 w-auto" />
+                            <ChatBubbleLeftRightIcon className="h-6 w-auto" />
                             Comunidade do Discord
                         </a>
                         {lesson?.attributes.challenge?.data?.attributes.URL && (
@@ -265,7 +265,7 @@ export function VideoPlayer(props: VideoProps) {
                                 target="_blank"
                                 className="p-4 text-sm border border-blue-500 text-blue-500 flex items-center rounded font-bold uppercase gap-2 justify-center hover:bg-blue-500 hover:text-gray-900 transition-colors duration-150"
                             >
-                                <LightningBoltIcon className="h-6 w-auto" />
+                                <BoltIcon className="h-6 w-auto" />
                                 Acesse o desafio
                             </a>
                         )}
@@ -278,7 +278,7 @@ export function VideoPlayer(props: VideoProps) {
                         className="bg-gray-700 rounded overflow-hidden flex items-stretch gap-6 hover:bg-gray-600 transition-colors duration-150"
                     >
                         <div className="bg-green-700 h-full p-6 flex items-center">
-                            <DocumentDownloadIcon className="h-10 w-auto" />
+                            <DocumentArrowDownIcon className="h-10 w-auto" />
                         </div>
                         <div className="p-6 leading-relaxed">
                             <strong className="text-2xl">
@@ -298,7 +298,7 @@ export function VideoPlayer(props: VideoProps) {
                         className="bg-gray-700 rounded overflow-hidden flex items-stretch gap-6 hover:bg-gray-600 transition-colors duration-150"
                     >
                         <div className="bg-green-700 h-full p-6 flex items-center">
-                            <DocumentDownloadIcon className="h-10 w-auto" />
+                            <DocumentArrowDownIcon className="h-10 w-auto" />
                         </div>
                         <div className="p-6 leading-relaxed">
                             <strong className="text-2xl">

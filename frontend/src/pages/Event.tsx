@@ -3,7 +3,7 @@ import { Sidebar } from '../components/Sidebar';
 import { VideoPlayer } from '../components/VideoPlayer';
 import { useParams } from 'react-router-dom';
 import { Footer } from '../components/Footer';
-import { ArrowCircleRightIcon } from '@heroicons/react/solid';
+import { ArrowRightCircleIcon } from '@heroicons/react/24/outline';
 
 export function Event() {
     const { slug } = useParams<{ slug: string }>();
@@ -25,7 +25,7 @@ export function Event() {
                                     <span>
                                         Escolha uma das aulas para começar...
                                     </span>
-                                    <ArrowCircleRightIcon className="w-16 h-auto text-blue-500 ml-4" />
+                                    <ArrowRightCircleIcon className="w-16 h-auto text-blue-500 ml-4" />
                                 </p>
                             </div>
                             <Footer />

@@ -10,11 +10,11 @@
     "strapi": "strapi"
   },
   "dependencies": {
-    "@strapi/plugin-graphql": "^4.3.5",
-    "@strapi/plugin-i18n": "4.3.5",
-    "@strapi/plugin-users-permissions": "4.3.5",
-    "@strapi/strapi": "4.3.5",
-    "pg": "8.6.0",
+    "@strapi/plugin-graphql": "^4.3.6",
+    "@strapi/plugin-i18n": "4.3.6",
+    "@strapi/plugin-users-permissions": "4.3.6",
+    "@strapi/strapi": "4.3.6",
+    "pg": "^8.8.0",
     "strapi-plugin-duplicate-button": "^1.0.4"
   },
   "author": {
