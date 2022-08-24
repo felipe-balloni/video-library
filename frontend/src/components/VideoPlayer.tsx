@@ -6,6 +6,10 @@ import {
 } from '@heroicons/react/outline';
 import '@vime/core/themes/default.css';
 import { DefaultUi, Player, Video, Vimeo, Youtube } from '@vime/react';
+import ReactMarkdown from 'react-markdown';
+import emoji from 'remark-emoji';
+import breaks from 'remark-breaks';
+import gfm from 'remark-gfm';
 import { gql, useQuery } from '@apollo/client';
 import { getStrapiMedia } from '../lib/media';
 import { Footer } from './Footer';
@@ -216,9 +220,12 @@ export function VideoPlayer(props: VideoProps) {
                         <h1 className="text-2xl font-bold">
                             {lesson?.attributes.title}
                         </h1>
-                        <p className="mt-4 text-gray-200 leading-relaxed">
-                            {lesson?.attributes.description}
-                        </p>
+                        <ReactMarkdown
+                            className="mt-4 text-gray-200 leading-relaxed"
+                            remarkPlugins={[emoji, breaks, gfm]}
+                        >
+                            {lesson?.attributes.description ?? ''}
+                        </ReactMarkdown>
                         <div className="flex items-center gap-4 mt-6">
                             <img
                                 className="h-16 w-auto rounded-full border-2 border-blue-500"
