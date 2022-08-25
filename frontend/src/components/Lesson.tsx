@@ -12,7 +12,7 @@ interface LessonProps {
     title: string;
     slug: string;
     availableAt: Date | null;
-    type: 'Live' | 'Hands-on';
+    type: 'Live' | 'Hands_on';
 }
 
 export function Lesson(props: LessonProps) {
@@ -43,7 +43,7 @@ export function Lesson(props: LessonProps) {
                         'text-sm font-medium flex items-center gap-2',
                         {
                             'text-white': isActiveLesson,
-                            'text-blue-500': isActiveLesson
+                            'text-blue-500': !isActiveLesson
                         }
                     )}
                 >

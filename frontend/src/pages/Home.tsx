@@ -1,31 +1,17 @@
 import { FormEvent, useState } from 'react';
-import { gql, useMutation } from '@apollo/client';
 
 import { Logo } from '../components/Logo';
 import { Footer } from '../components/Footer';
 import codeMock from '/src/assets/code-mock.png';
 import { useNavigate } from 'react-router-dom';
-
-const CREATE_SUBSCRIBER = gql`
-    mutation createSubscriber($name: String!, $email: String!) {
-        createSubscriber(data: { name: $name, email: $email }) {
-            data {
-                id
-                attributes {
-                    name
-                    email
-                }
-            }
-        }
-    }
-`;
+import { useCreateSubscriberMutation } from '../graphql/generated';
 
 export function Home() {
     const navigate = useNavigate();
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
 
-    const [createSubscriber, { loading }] = useMutation(CREATE_SUBSCRIBER);
+    const [createSubscriber, { loading }] = useCreateSubscriberMutation();
 
     function handeSubscribe(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();

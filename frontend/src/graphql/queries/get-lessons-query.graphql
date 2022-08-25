@@ -1,0 +1,14 @@
+query GetLessons {
+    lessons(sort: ["availableAt:asc"]) {
+        data {
+            id
+            attributes {
+                title
+                slug
+                description
+                availableAt
+                type
+            }
+        }
+    }
+}

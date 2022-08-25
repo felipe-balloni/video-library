@@ -10,171 +10,44 @@ import ReactMarkdown from 'react-markdown';
 import emoji from 'remark-emoji';
 import breaks from 'remark-breaks';
 import gfm from 'remark-gfm';
-import { gql, useQuery } from '@apollo/client';
 import { getStrapiMedia } from '../lib/media';
 import { Footer } from './Footer';
-
-const GET_LESSON_BY_SLUG = gql`
-    fragment FileParts on UploadFileEntityResponse {
-        data {
-            id
-            attributes {
-                name
-                alternativeText
-                caption
-                width
-                height
-                url
-            }
-        }
-    }
-    query GetLesson($slug: String) {
-        lessons(filters: { slug: { eq: $slug } }) {
-            data {
-                id
-                attributes {
-                    title
-                    slug
-                    description
-                    availableAt
-                    type
-                    challenge {
-                        data {
-                            id
-                            attributes {
-                                URL
-                            }
-                        }
-                    }
-                    teacher {
-                        data {
-                            id
-                            attributes {
-                                name
-                                bio
-                                avatar {
-                                    ...FileParts
-                                }
-                            }
-                        }
-                    }
-                    Video {
-                        __typename
-                        ... on ComponentVideoVideoFromYouTube {
-                            id
-                            videoID
-                        }
-                        ... on ComponentVideoVideoFromLibrary {
-                            id
-                            title
-                            media {
-                                ...FileParts
-                            }
-                        }
-                        ... on ComponentVideoVideoFromVimeo {
-                            id
-                            videoID
-                        }
-                    }
-                }
-            }
-        }
-    }
-`;
-
-interface FileParts {
-    data: {
-        id: number;
-        attributes: {
-            name: string;
-            alternativeText: string;
-            caption: string;
-            width: number;
-            height: number;
-            url: string;
-        };
-    };
-}
-
-interface Teacher {
-    data: {
-        id: number;
-        attributes: {
-            name: string;
-            bio: string;
-            avatar?: FileParts;
-        };
-    };
-}
-
-interface Challenge {
-    data: {
-        id: number;
-        attributes: {
-            URL: string;
-        };
-    };
-}
-
-interface GetLessonsResponse {
-    lessons: {
-        data: [
-            {
-                id: number;
-                attributes: {
-                    title: string;
-                    slug: string;
-                    description: string;
-                    availableAt: Date;
-                    type: 'Live' | 'Hands-on';
-                    challenge?: Challenge;
-                    teacher?: Teacher;
-                    Video: [
-                        {
-                            __typename:
-                                | 'ComponentVideoVideoFromYouTube'
-                                | 'ComponentVideoVideoFromLibrary'
-                                | 'ComponentVideoVideoFromVimeo';
-                            id: number;
-                            title?: string;
-                            media?: FileParts;
-                            videoID?: string | null;
-                        }
-                    ];
-                };
-            }
-        ];
-    };
-}
+import { useGetLessonBySlugQuery } from '../graphql/generated';
 
 interface VideoProps {
     lessonSlug: string;
 }
 
 export function VideoPlayer(props: VideoProps) {
-    const { data } = useQuery<GetLessonsResponse>(GET_LESSON_BY_SLUG, {
-        variables: {
-            slug: props.lessonSlug
-        }
+    const { data } = useGetLessonBySlugQuery({
+        variables: { slug: props.lessonSlug }
     });
 
-    const lesson = data?.lessons.data[0];
+    if (!data?.lessons?.data[0]) {
+        return (
+            <section className="flex-1">
+                <div className="flex justify-center">
+                    <p>Carregando...</p>
+                </div>
+            </section>
+        );
+    }
+
+    const lesson = data.lessons.data[0];
+    const teacher = lesson.attributes?.teacher?.data?.attributes;
+    const video = lesson.attributes?.Video[0];
 
     const VideoFinal = () => {
-        switch (lesson?.attributes.Video[0].__typename) {
+        switch (video?.__typename) {
             case 'ComponentVideoVideoFromYouTube':
                 return (
                     <Player>
-                        <Youtube
-                            videoId={lesson.attributes.Video[0].videoID ?? ''}
-                        />
+                        <Youtube videoId={video.videoID ?? ''} />
                         <DefaultUi />
                     </Player>
                 );
             case 'ComponentVideoVideoFromLibrary':
-                const media =
-                    lesson.attributes.Video[0].media?.data.attributes?.url ??
-                    '';
+                const media = video.media?.data?.attributes?.url ?? '';
                 return (
                     { media } && (
                         <Player>
@@ -191,9 +64,7 @@ export function VideoPlayer(props: VideoProps) {
             case 'ComponentVideoVideoFromVimeo':
                 return (
                     <Player>
-                        <Vimeo
-                            videoId={lesson.attributes.Video[0].videoID ?? ''}
-                        />
+                        <Vimeo videoId={video.videoID ?? ''} />
                         <DefaultUi />
                     </Player>
                 );
@@ -218,35 +89,34 @@ export function VideoPlayer(props: VideoProps) {
                 <header className="flex items-start gap-16">
                     <div className="flex-1">
                         <h1 className="text-2xl font-bold">
-                            {lesson?.attributes.title}
+                            {lesson.attributes?.title}
                         </h1>
                         <ReactMarkdown
                             className="mt-4 text-gray-200 leading-relaxed"
                             remarkPlugins={[emoji, breaks, gfm]}
                         >
-                            {lesson?.attributes.description ?? ''}
+                            {lesson.attributes?.description ?? ''}
                         </ReactMarkdown>
-                        <div className="flex items-center gap-4 mt-6">
-                            <img
-                                className="h-16 w-auto rounded-full border-2 border-blue-500"
-                                src="https://github.com/felipe-balloni.png"
-                                alt=""
-                            />
-                            <div className="leading-relaxed">
-                                <strong className="font-bold text-2xl block">
-                                    {
-                                        lesson?.attributes.teacher?.data
-                                            .attributes.name
-                                    }
-                                </strong>
-                                <span className="text-sm text-gray-200 block">
-                                    {
-                                        lesson?.attributes.teacher?.data
-                                            .attributes.bio
-                                    }
-                                </span>
+                        {teacher && (
+                            <div className="flex items-center gap-4 mt-6">
+                                <img
+                                    className="h-16 w-16 object-cover rounded-full border-2 border-blue-500"
+                                    src={getStrapiMedia(
+                                        teacher.avatar?.data?.attributes?.url ??
+                                            ''
+                                    )}
+                                    alt=""
+                                />
+                                <div className="leading-relaxed">
+                                    <strong className="font-bold text-2xl block">
+                                        {teacher.name}
+                                    </strong>
+                                    <span className="text-sm text-gray-200 block">
+                                        {teacher.bio}
+                                    </span>
+                                </div>
                             </div>
-                        </div>
+                        )}
                     </div>
                     <div className="flex flex-col gap-4">
                         <a
@@ -256,11 +126,12 @@ export function VideoPlayer(props: VideoProps) {
                             <ChatBubbleLeftRightIcon className="h-6 w-auto" />
                             Comunidade do Discord
                         </a>
-                        {lesson?.attributes.challenge?.data?.attributes.URL && (
+                        {lesson?.attributes?.challenge?.data?.attributes
+                            ?.URL && (
                             <a
                                 href={
-                                    lesson?.attributes.challenge?.data
-                                        ?.attributes.URL
+                                    lesson.attributes.challenge.data.attributes
+                                        .URL
                                 }
                                 target="_blank"
                                 className="p-4 text-sm border border-blue-500 text-blue-500 flex items-center rounded font-bold uppercase gap-2 justify-center hover:bg-blue-500 hover:text-gray-900 transition-colors duration-150"
@@ -271,6 +142,7 @@ export function VideoPlayer(props: VideoProps) {
                         )}
                     </div>
                 </header>
+                {/*TODO: Add global content to make dynamic this component*/}
                 <div className="gap-8 mt-20 grid grid-cols-2">
                     <a
                         href="#"

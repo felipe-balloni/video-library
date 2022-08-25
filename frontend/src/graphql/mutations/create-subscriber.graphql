@@ -1,0 +1,11 @@
+mutation createSubscriber($name: String!, $email: String!) {
+    createSubscriber(data: { name: $name, email: $email }) {
+        data {
+            id
+            attributes {
+                name
+                email
+            }
+        }
+    }
+}

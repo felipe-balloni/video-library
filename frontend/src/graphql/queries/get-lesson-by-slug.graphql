@@ -1,0 +1,65 @@
+fragment FileParts on UploadFileEntityResponse {
+    data {
+        id
+        attributes {
+            name
+            alternativeText
+            caption
+            width
+            height
+            url
+        }
+    }
+}
+query GetLessonBySlug($slug: String) {
+    lessons(filters: { slug: { eq: $slug } }) {
+        data {
+            id
+            attributes {
+                title
+                slug
+                description
+                availableAt
+                type
+                challenge {
+                    data {
+                        id
+                        attributes {
+                            URL
+                        }
+                    }
+                }
+                teacher {
+                    data {
+                        id
+                        attributes {
+                            name
+                            bio
+                            avatar {
+                                ...FileParts
+                            }
+                        }
+                    }
+                }
+                Video {
+                    __typename
+                    ... on ComponentVideoVideoFromYouTube {
+                        id
+                        videoID
+                    }
+                    ... on ComponentVideoVideoFromLibrary {
+                        id
+                        title
+                        media {
+                            ...FileParts
+                        }
+                    }
+                    ... on ComponentVideoVideoFromVimeo {
+                        id
+                        videoID
+                    }
+                }
+            }
+        }
+    }
+}

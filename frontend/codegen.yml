@@ -1,0 +1,18 @@
+overwrite: true
+schema:
+    http://localhost:1337/graphql:
+        headers:
+            Authorization: ${VITE_AUTH_TOKEN}
+documents: './src/graphql/**/*.graphql'
+generates:
+    ./src/graphql/generated.ts:
+        plugins:
+            - typescript
+            - typescript-operations
+            - typescript-react-apollo
+        config:
+            reactApolloVersion: 3
+            withHooks: true
+            withHOC: false
+            withComponent: false
+
